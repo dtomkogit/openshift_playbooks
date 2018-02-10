@@ -1,0 +1,87 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+etcd
+glusterfs
+nodes
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=root
+
+# enable clock sync
+openshift_clock_enabled=true
+
+# OpenShift Deployment, enterprise of course!
+openshift_deployment_type=openshift-enterprise
+
+# define where to install router
+#openshift_hosted_router_selector='purpose=infra'
+# define default nodes for apps
+osm_default_node_selector='region=app'
+# define where to install registry
+#openshift_hosted_registry_selector='purpose=infra'
+
+#Set Domain for Apps, should point to router node (infra by default)
+openshift_master_default_subdomain=172.20.237.144.xip.io
+
+# Enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+# Set networking to multi-tenant
+os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
+
+# Enable CNS (glusterfs) as default storage provider
+openshift_storage_glusterfs_namespace=glusterfs
+openshift_storage_glusterfs_name=storage
+
+# Deploy logging and defining storage type
+openshift_logging_install_logging=true
+#openshift_logging_storage_kind=dynamic
+openshift_logging_es_nodeselector="{'region':'infra'}"
+openshift_logging_kibana_nodeselector="{'region':'infra'}"
+openshift_logging_curator_nodeselector="{'region':'infra'}"
+#openshift_logging_es_pvc_dynamic=true
+#openshift_logging_es_pvc_size=10G 
+
+#Deploy Metrics (deployed by default, just set storage type)
+openshift_metrics_install_metrics=true
+#openshift_metrics_cassandra_storage_type=dynamic
+openshift_metrics_hawkular_nodeselector="{'region':'infra'}"
+openshift_metrics_cassandra_nodeselector="{'region':'infra'}"
+openshift_metrics_heapster_nodeselector="{'region':'infra'}"
+
+#Deploy Prometheus
+#openshift_hosted_prometheus_deploy=true
+#openshift_prometheus_node_selector="{'region':'infra'}"
+
+#Disable disk and memory checks
+#openshift_disable_check=disk_availability,memory_availability
+
+# define firewalld as firewall
+os_firewall_use_firewalld=True
+# enable dynamic provisioning for gluster to work
+openshift_master_dynamic_provisioning_enabled=True
+# host group for masters
+
+[masters]
+xbgwy-vs.icdc.io
+
+# host group for etcd
+[etcd]
+xbgwy-vs.icdc.io
+
+# host group for glusterfs
+[glusterfs]
+pnvbv-vs.icdc.io glusterfs_devices='[ "/dev/vdc" ]'
+voptl-vs.icdc.io glusterfs_devices='[ "/dev/vdc" ]'
+wloic-vs.icdc.io glusterfs_devices='[ "/dev/vdc" ]'
+
+# host group for nodes, includes region info
+[nodes]
+xbgwy-vs.icdc.io openshift_schedulable=False
+zowva-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'infra'}"
+pnvbv-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
+voptl-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
+wloic-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
