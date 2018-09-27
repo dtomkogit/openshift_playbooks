@@ -46,7 +46,6 @@
 [OSEv3:children]
 masters
 etcd
-# glusterfs
 nodes
 nfs
 
@@ -71,13 +70,13 @@ openshift_deployment_type=openshift-enterprise
 # setup nfs registry
 openshift_hosted_registry_storage_kind=nfs
 openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
-openshift_hosted_registry_storage_nfs_directory=/exports
+openshift_hosted_registry_storage_nfs_directory=/nfs/openshift
 openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
 openshift_hosted_registry_storage_volume_name=registry
-openshift_hosted_registry_storage_volume_size=10Gi
+openshift_hosted_registry_storage_volume_size=20Gi
 
 #Set Domain for Apps, should point to router node (infra by default)
-openshift_master_default_subdomain=172.16.1.15.xip.io
+openshift_master_default_subdomain=brwapps.icdc.io
 
 # Enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
@@ -119,25 +118,18 @@ openshift_master_dynamic_provisioning_enabled=True
 # host group for masters
 
 [masters]
-ocpmaster.iba
+qeobo-vs.icdc.io
 
 # host group for etcd
 [etcd]
-ocpmaster.iba
-
-# host group for glusterfs
-#[glusterfs]
-#ocpnode1.iba glusterfs_devices='[ "/dev/sdc" ]'
-#ocpnode2.iba glusterfs_devices='[ "/dev/sdc" ]'
-#ocpnode3.iba glusterfs_devices='[ "/dev/sdc" ]'
+qeobo-vs.icdc.io
 
 [nfs]
-ocpnode1.iba
+xtkod-vs.icdc.io
 
 # host group for nodes, includes region info
 [nodes]
-ocpmaster.iba
-ocpinfra.iba openshift_schedulable=True openshift_node_labels="{'region': 'infra'}"
-ocpnode1.iba openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
-ocpnode2.iba openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
-ocpnode3.iba openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
+qeobo-vs.icdc.io
+frnwp-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'infra'}
+nczvg-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
+owbwc-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
