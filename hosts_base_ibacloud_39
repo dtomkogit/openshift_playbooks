@@ -130,6 +130,6 @@ xtkod-vs.icdc.io
 # host group for nodes, includes region info
 [nodes]
 qeobo-vs.icdc.io
-frnwp-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'infra'}
+frnwp-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'infra'}"
 nczvg-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
 owbwc-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"

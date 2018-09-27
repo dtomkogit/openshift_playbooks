@@ -58,6 +58,9 @@ ansible_ssh_user=root
 # enable clock sync
 openshift_clock_enabled=true
 
+# to enable NFS for registry
+openshift_enable_unsupported_configurations=True
+
 # OpenShift Deployment, enterprise of course!
 openshift_deployment_type=openshift-enterprise
 
