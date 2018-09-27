@@ -46,9 +46,8 @@
 [OSEv3:children]
 masters
 etcd
-# glusterfs
+glusterfs
 nodes
-nfs
 
 # Set variables common for all OSEv3 hosts
 [OSEv3:vars]
@@ -57,9 +56,6 @@ ansible_ssh_user=root
 
 # enable clock sync
 openshift_clock_enabled=true
-
-# to enable NFS for registry
-#openshift_enable_unsupported_configurations=True
 
 # OpenShift Deployment, enterprise of course!
 openshift_deployment_type=openshift-enterprise
@@ -70,17 +66,11 @@ openshift_deployment_type=openshift-enterprise
 #osm_default_node_selector='region=app'
 # define where to install registry
 #openshift_hosted_registry_selector='purpose=infra'
-
-# setup nfs registry
-openshift_hosted_registry_storage_kind=nfs
-openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
-openshift_hosted_registry_storage_nfs_directory=/exports
-openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
-openshift_hosted_registry_storage_volume_name=registry
-openshift_hosted_registry_storage_volume_size=10Gi
+openshift_hosted_registry_storage_kind=glusterfs
+openshift_hosted_registry_storage_volume_size=5Gi
 
 #Set Domain for Apps, should point to router node (infra by default)
-openshift_master_default_subdomain=172.16.1.15.xip.io
+openshift_master_default_subdomain=brwapps.icdc.io
 
 # Enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
@@ -89,8 +79,8 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
 
 # Enable CNS (glusterfs) as default storage provider
-# openshift_storage_glusterfs_namespace=glusterfs
-# openshift_storage_glusterfs_name=storage
+openshift_storage_glusterfs_namespace=glusterfs
+openshift_storage_glusterfs_name=storage
 
 # Deploy logging and defining storage type
 #openshift_logging_install_logging=true
@@ -122,25 +112,22 @@ openshift_master_dynamic_provisioning_enabled=True
 # host group for masters
 
 [masters]
-ocpmaster.iba
+qeobo-vs.icdc.io
 
 # host group for etcd
 [etcd]
-ocpmaster.iba
+qeobo-vs.icdc.io
 
 # host group for glusterfs
-#[glusterfs]
-#ocpnode1.iba glusterfs_devices='[ "/dev/sdc" ]'
-#ocpnode2.iba glusterfs_devices='[ "/dev/sdc" ]'
-#ocpnode3.iba glusterfs_devices='[ "/dev/sdc" ]'
-
-[nfs]
-ocpnode1.iba
+[glusterfs]
+nczvg-vs.icdc.io glusterfs_devices='[ "/dev/sdb" ]'
+owbwc-vs.icdc.io glusterfs_devices='[ "/dev/sdb" ]'
+hslmn-vs.icdc.io glusterfs_devices='[ "/dev/sdb" ]'
 
 # host group for nodes, includes region info
 [nodes]
-ocpmaster.iba
-ocpinfra.iba openshift_schedulable=True openshift_node_labels="{'region': 'infra'}"
-ocpnode1.iba openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
-ocpnode2.iba openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
-ocpnode3.iba openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
+qeobo-vs.icdc.io
+frnwp-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'infra'}"
+nczvg-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
+owbwc-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
+hslmn-vs.icdc.io openshift_schedulable=True openshift_node_labels="{'region': 'app'}"
