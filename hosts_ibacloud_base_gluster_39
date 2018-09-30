@@ -67,7 +67,7 @@ openshift_deployment_type=openshift-enterprise
 # define where to install registry
 #openshift_hosted_registry_selector='purpose=infra'
 openshift_hosted_registry_storage_kind=glusterfs
-openshift_hosted_registry_storage_volume_size=50Gi
+openshift_hosted_registry_storage_volume_size=10Gi
 
 #Set Domain for Apps, should point to router node (infra by default)
 openshift_master_default_subdomain=brwapps.icdc.io
