@@ -67,9 +67,10 @@ openshift_deployment_type=openshift-enterprise
 # define where to install registry
 #openshift_hosted_registry_selector='purpose=infra'
 openshift_hosted_registry_storage_kind=glusterfs
-openshift_hosted_registry_storage_volume_size=30Gi
-#oreg_auth_user=xxxxx|yyyy
-#oreg_auth_password=xxxxx
+openshift_hosted_registry_storage_volume_size=20Gi
+
+#oreg_auth_user=
+#oreg_auth_password=
 
 
 #Set Domain for Apps, should point to router node (infra by default)
